@@ -1,16 +1,11 @@
-package leapmotionship;
+package MongoDB;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.async.SingleResultCallback;
 import com.mongodb.async.client.*;
-import com.mongodb.client.model.Aggregates;
 import static com.mongodb.client.model.Filters.eq;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Semaphore;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 

@@ -1,4 +1,4 @@
-package leapmotionship;
+package MongoDB;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;

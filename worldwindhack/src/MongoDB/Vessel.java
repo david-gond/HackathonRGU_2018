@@ -1,4 +1,4 @@
-package leapmotionship;
+package MongoDB;
 
 import org.bson.types.ObjectId;
 
