@@ -1,2 +1,4 @@
 /bin/*
 .class
+/worldwind/nbproject/private/
+/worldwindhack/nbproject/private/
