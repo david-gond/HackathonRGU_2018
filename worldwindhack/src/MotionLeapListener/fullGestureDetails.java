@@ -23,7 +23,7 @@ public class fullGestureDetails {
         this.speed = speed;
     }
     */
-    public String returnDirectionAndSpeed() {
+    public Direction returnDirectionAndSpeed() {
     
         // Which direction are we going? Let's compare x and y.
         double startX = start.getX();
@@ -54,11 +54,11 @@ public class fullGestureDetails {
             // We are moving in the X axis. Are we moving left or right?
             if (differenceX > 0)
             {
-                return "right";
+                return Direction.RIGHT;
             }
             else
             {
-                return "left";
+                return Direction.LEFT;
             }
         }
         else
@@ -66,11 +66,11 @@ public class fullGestureDetails {
             // We are moving in the Y axis. Are we moving up or down?
             if (differenceY > 0)
             {
-                return "up";
+                return Direction.UP;
             }
             else
             {
-                return "down";
+                return Direction.DOWN;
             }
         }
     }

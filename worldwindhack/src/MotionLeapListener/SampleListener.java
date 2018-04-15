@@ -8,9 +8,20 @@ import static com.leapmotion.leap.Gesture.State.STATE_STOP;
 import com.leapmotion.leap.GestureList;
 import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
+import gov.nasa.worldwind.layers.ViewControlsSelectListener;
+import java.awt.AWTException;
+import java.awt.Dimension;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Robot;
+import java.awt.event.InputEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-
-    
+enum Direction
+{
+    UP, DOWN, LEFT, RIGHT, NONE
+}
   
 public class SampleListener extends Listener {
     
@@ -38,11 +49,10 @@ public class SampleListener extends Listener {
         System.out.println("Exited");
     }
     
-    public String getSwipeDirection(SwipeGesture swipe) {
-        
-        
-        return "none";
+    public Direction getSwipeDirection(SwipeGesture swipe) {
+        return Direction.NONE;
     }
+    
     public void onFrame(Controller controller) {
         //System.out.println("Frame available");
         Frame frame = controller.frame();
@@ -86,7 +96,7 @@ public class SampleListener extends Listener {
                             break;
                         case STATE_STOP:
                             
-                            if (swipe.speed() > 130)
+                            if (swipe.speed() > 200)
                             {
                                 System.out.println("got a stop state at " 
                                     + String.valueOf(swipe.id())
@@ -99,14 +109,57 @@ public class SampleListener extends Listener {
                                (gesturesArray[swipe.id()].start.getX() != 0.0)) {
                                 // If it's valid we will return a direction
                                     System.out.println("Calling returnDirection!");
-                                    String thingy = gesturesArray[swipe.id()].returnDirectionAndSpeed();
+                                    Direction thingy = gesturesArray[swipe.id()].returnDirectionAndSpeed();
                                     System.out.println("Result: " + thingy);
+                                    moveMouse(thingy);
                             }
                             break;
                     }
                     break;
             }
         }
-        
+    }
+    
+    public void moveMouse(Direction direction)
+    {
+        Robot robot = null;
+        try
+        {
+            robot = new Robot();
+            Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+            Point mousePoint = MouseInfo.getPointerInfo().getLocation();
+            switch (direction)
+            {
+                case UP:
+                    robot.mouseMove(screenSize.width / 2, 50);
+                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                    robot.mouseMove(screenSize.width / 2, screenSize.height / 2);
+                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+                    break;
+                case DOWN:
+                    robot.mouseMove(screenSize.width / 2, screenSize.height / 2);
+                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                    robot.mouseMove(screenSize.width / 2, 50);
+                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+                    break;
+                case LEFT:
+                    robot.mouseMove(screenSize.width / 2, screenSize.height / 2);
+                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                    robot.mouseMove(screenSize.width - 50, screenSize.height / 2);
+                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+                    break;
+                case RIGHT:
+                    robot.mouseMove(screenSize.width - 50, screenSize.height / 2);
+                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                    robot.mouseMove(screenSize.width / 2, screenSize.height / 2);
+                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+                    break;
+            }
+            robot.mouseMove(mousePoint.x, mousePoint.y);
+        }
+        catch (AWTException ex)
+        {
+            Logger.getLogger(ViewControlsSelectListener.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

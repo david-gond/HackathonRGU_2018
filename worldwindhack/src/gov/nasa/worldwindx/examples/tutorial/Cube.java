@@ -312,38 +312,25 @@ public class Cube extends ApplicationTemplate implements Renderable
             ArrayList<Vessel> vessels = db.getAllVessels();
             semaphore.acquire();
             System.out.println(vessels.size());
-            /*
-            */
             db.disconnect();
-            
-            /*for (Vessel vessel : vessels)
-            {
-                if(vessel.getLatitude() != 0 && vessel.getLongitude() != 0){
-                Cube cube = new Cube(Position.fromDegrees(vessel.getLatitude(), vessel.getLongitude(), 3000), (vessel.getLength() * vessel.getWidth()) *10);
-                layer.addRenderable(cube);
-                }
-            }*/
-            
-            
+           
             for (Vessel vessel : vessels)
             {
                 if(vessel.getLatitude() != 0 && vessel.getLongitude() != 0 
                         && vessel.getShipType() > 0 
-                        && vessel.getShipType() < 246 && vessel.getShipType() != 218 || vessel.getShipType() == 248){
-                Cube cube = new Cube(Position.fromDegrees(vessel.getLongitude(), vessel.getLatitude(), 100), 1000);
-                layer.addRenderable(cube);
+                        && vessel.getShipType() < 246 
+                        && vessel.getShipType() != 218 
+                        || vessel.getShipType() == 248)
+                {
+                    Cube cube = new Cube(Position.fromDegrees(vessel.getLongitude(), vessel.getLatitude(), 100), 1000);
+                    layer.addRenderable(cube);
                 }
             }
-            
-            
         }
         catch (InterruptedException ex)
         {
             Logger.getLogger(LeapMotionShip.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-            
-
             getWwd().getModel().getLayers().add(layer);
         }
     }
@@ -352,29 +339,24 @@ public class Cube extends ApplicationTemplate implements Renderable
     {
         
         // Create a sample listener and controller
-
-
-        
         Configuration.setValue(AVKey.INITIAL_LATITUDE, 65);
         Configuration.setValue(AVKey.INITIAL_LONGITUDE, -1.2);
         Configuration.setValue(AVKey.INITIAL_ALTITUDE, 5000000);
         Configuration.setValue(AVKey.INITIAL_PITCH, 45);
         Configuration.setValue(AVKey.INITIAL_HEADING, 45);
 
-        //ApplicationTemplate.start("World Wind Custom Renderable Tutorial", AppFrame.class);
+        ApplicationTemplate.start("World Wind Custom Renderable Tutorial", AppFrame.class);
         
         SampleListener listener = new SampleListener();
         com.leapmotion.leap.Controller controller = new com.leapmotion.leap.Controller();
         
         controller.addListener(listener);
-        
         // Keep this process running until Enter is pressed
         System.out.println("Press Enter to quit...");
         
         try {
             System.in.read();
         } catch (IOException e) {
-            e.printStackTrace();
         }
         
                 // Remove the sample listener when done
