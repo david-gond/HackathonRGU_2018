@@ -13,6 +13,7 @@ import com.leapmotion.leap.SwipeGesture;
 public class SampleListener extends Listener {
     
     fullGestureDetails[] gesturesArray = new fullGestureDetails[20]; 
+    
 
     public void onInit(Controller controller) {
         System.out.println("Initialised!");
@@ -65,12 +66,21 @@ public class SampleListener extends Listener {
                             
                     + " Speed: " + swipe.speed());
                     */
-                    System.out.println("Gesture_1 start: " + gesturesArray[1].start + ", stop: " +  gesturesArray[1].stop );
-                    switch (swipe.state().toString()) {
-                        case "STATE_START":
-                            gesturesArray[swipe.id()].start = swipe.position();
+
+                    System.out.println("String value: " + String.valueOf(swipe.state()));
+                   // System.out.println("Gesture_1 start: " + gesturesArray[1].start + ", stop: " +  gesturesArray[1].stop );
+                   // switch ((String.valueOf(swipe.state()).trim())) {
+                    switch (swipe.state()) {
+                        case STATE_START:
+                            int id = Integer.valueOf(swipe.id());
+                            System.out.println("Triggered start state");
+                            System.out.println("got a start state at " + String.valueOf(id) + ", value: " + String.valueOf(swipe.position()));
+                            gesturesArray[id].start = swipe.position();
+                            System.out.println(String.valueOf(id));
+                            System.out.println((gesturesArray[id].start).get(1));
                             break;
-                        case "STATE_STOP":
+                        case STATE_STOP:
+                            System.out.println("got a stop state at " + String.valueOf(swipe.id()));
                             gesturesArray[swipe.id()].stop = swipe.position();
                             gesturesArray[swipe.id()].speed = swipe.speed();
                             // Check if we now have a valid start and stop value for this ID

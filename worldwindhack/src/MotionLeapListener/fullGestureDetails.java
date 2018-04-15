@@ -14,7 +14,7 @@ import com.leapmotion.leap.Vector;
 public class fullGestureDetails {
     Vector start = new Vector();
     Vector stop = new Vector();
-    int id;
+    //int id;
     double speed;
     /*
     public fullGestureDetails(double start[], double stop[], double speed)
