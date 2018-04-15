@@ -11,18 +11,12 @@ import com.leapmotion.leap.Vector;
  *
  * @author gondd
  */
-public class fullGestureDetails {
+public class gestureSwipe {
     Vector start = new Vector();
     Vector stop = new Vector();
-    //int id;
+    int id;
     double speed;
-    /*
-    public fullGestureDetails(double start[], double stop[], double speed)
-    {
-        this.stop = stop;
-        this.speed = speed;
-    }
-    */
+    
     public Direction returnDirectionAndSpeed() {
     
         // Which direction are we going? Let's compare x and y.

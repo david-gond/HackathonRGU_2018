@@ -3,7 +3,6 @@
  * National Aeronautics and Space Administration.
  * All Rights Reserved.
  */
-
 package gov.nasa.worldwindx.examples.tutorial;
 
 import MongoDB.Database;
@@ -28,24 +27,31 @@ import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
- * Example of a custom {@link Renderable} that draws a cube at a geographic position. This class shows the simplest
- * possible example of a custom Renderable, while still following World Wind best practices. See
- * http://goworldwind.org/developers-guide/how-to-build-a-custom-renderable/ for a complete description of this
- * example.
+ * Example of a custom {@link Renderable} that draws a cube at a geographic
+ * position. This class shows the simplest possible example of a custom
+ * Renderable, while still following World Wind best practices. See
+ * http://goworldwind.org/developers-guide/how-to-build-a-custom-renderable/ for
+ * a complete description of this example.
  *
  * @author pabercrombie
  * @version $Id: Cube.java 691 2012-07-12 19:17:17Z pabercrombie $
  */
 public class Cube extends ApplicationTemplate implements Renderable
 {
-    /** Geographic position of the cube. */
+
+    /**
+     * Geographic position of the cube.
+     */
     protected Position position;
-    /** Length of each face, in meters. */
+    /**
+     * Length of each face, in meters.
+     */
     protected double size;
 
-    /** Support object to help with pick resolution. */
+    /**
+     * Support object to help with pick resolution.
+     */
     protected PickSupport pickSupport = new PickSupport();
 
     // Determined each frame
@@ -53,15 +59,21 @@ public class Cube extends ApplicationTemplate implements Renderable
     protected OrderedCube currentFramesOrderedCube;
 
     /**
-     * This class holds the Cube's Cartesian coordinates. An instance of it is added to the scene controller's ordered
-     * renderable queue during picking and rendering.
+     * This class holds the Cube's Cartesian coordinates. An instance of it is
+     * added to the scene controller's ordered renderable queue during picking
+     * and rendering.
      */
     protected class OrderedCube implements OrderedRenderable
     {
-        /** Cartesian position of the cube, computed from
-         * {@link gov.nasa.worldwindx.examples.tutorial.Cube#position}. */
+
+        /**
+         * Cartesian position of the cube, computed from
+         * {@link gov.nasa.worldwindx.examples.tutorial.Cube#position}.
+         */
         protected Vec4 placePoint;
-        /** Distance from the eye point to the cube. */
+        /**
+         * Distance from the eye point to the cube.
+         */
         protected double eyeDistance;
         /**
          * The cube's Cartesian bounding extent.
@@ -92,7 +104,7 @@ public class Cube extends ApplicationTemplate implements Renderable
     }
 
     public void render(DrawContext dc)
-    { 
+    {
         // Render is called twice, once for picking and once for rendering. In both cases an OrderedCube is added to
         // the ordered renderable queue.
 
@@ -101,11 +113,15 @@ public class Cube extends ApplicationTemplate implements Renderable
         if (orderedCube.extent != null)
         {
             if (!this.intersectsFrustum(dc, orderedCube))
+            {
                 return;
+            }
 
             // If the shape is less that a pixel in size, don't render it.
             if (dc.isSmall(orderedCube.extent, 1))
+            {
                 return;
+            }
         }
 
         // Add the cube to the ordered renderable queue. The SceneController sorts the ordered renderables by eye
@@ -123,13 +139,16 @@ public class Cube extends ApplicationTemplate implements Renderable
     protected boolean intersectsFrustum(DrawContext dc, OrderedCube orderedCube)
     {
         if (dc.isPickingMode())
+        {
             return dc.getPickFrustums().intersectsAny(orderedCube.extent);
+        }
 
         return dc.getView().getFrustumInModelCoordinates().intersects(orderedCube.extent);
     }
 
     /**
-     * Compute per-frame attributes, and add the ordered renderable to the ordered renderable list.
+     * Compute per-frame attributes, and add the ordered renderable to the
+     * ordered renderable list.
      *
      * @param dc Current draw context.
      */
@@ -149,7 +168,7 @@ public class Cube extends ApplicationTemplate implements Renderable
             if (dc.is2DGlobe())
             {
                 orderedCube.placePoint = dc.getGlobe().computePointFromPosition(this.position.getLatitude(),
-                    this.position.getLongitude(), 0);
+                        this.position.getLongitude(), 0);
             }
             else
             {
@@ -176,8 +195,8 @@ public class Cube extends ApplicationTemplate implements Renderable
     }
 
     /**
-     * Set up drawing state, and draw the cube. This method is called when the cube is rendered in ordered rendering
-     * mode.
+     * Set up drawing state, and draw the cube. This method is called when the
+     * cube is rendered in ordered rendering mode.
      *
      * @param dc Current draw context.
      */
@@ -205,8 +224,8 @@ public class Cube extends ApplicationTemplate implements Renderable
     }
 
     /**
-     * Setup drawing state in preparation for drawing the cube. State changed by this method must be restored in
-     * endDrawing.
+     * Setup drawing state in preparation for drawing the cube. State changed by
+     * this method must be restored in endDrawing.
      *
      * @param dc Active draw context.
      */
@@ -252,7 +271,9 @@ public class Cube extends ApplicationTemplate implements Renderable
         GL2 gl = dc.getGL().getGL2(); // GL initialization checks for GL2 compatibility.
 
         if (!dc.isPickingMode())
+        {
             dc.endStandardLighting();
+        }
 
         gl.glPopAttrib();
     }
@@ -265,14 +286,79 @@ public class Cube extends ApplicationTemplate implements Renderable
     protected void drawUnitCube(DrawContext dc)
     {
         // Vertices of a unit cube, centered on the origin.
-        float[][] v = {{-0.5f, 0.5f, -0.5f}, {-0.5f, 0.5f, 0.5f}, {0.5f, 0.5f, 0.5f}, {0.5f, 0.5f, -0.5f},
-            {-0.5f, -0.5f, 0.5f}, {0.5f, -0.5f, 0.5f}, {0.5f, -0.5f, -0.5f}, {-0.5f, -0.5f, -0.5f}};
+        float[][] v =
+        {
+            {
+                -0.5f, 0.5f, -0.5f
+            }, 
+            {
+                -0.5f, 0.5f, 0.5f
+            }, 
+            {
+                0.5f, 0.5f, 0.5f
+            }, 
+            {
+                0.5f, 0.5f, -0.5f
+            },
+            {
+                -0.5f, -0.5f, 0.5f
+            }, 
+            {
+                0.5f, -0.5f, 0.5f
+            }, 
+            {
+                0.5f, -0.5f, -0.5f
+            }, 
+            {
+                -0.5f, -0.5f, -0.5f
+            }
+        };
 
         // Array to group vertices into faces
-        int[][] faces = {{0, 1, 2, 3}, {2, 5, 6, 3}, {1, 4, 5, 2}, {0, 7, 4, 1}, {0, 7, 6, 3}, {4, 7, 6, 5}};
+        int[][] faces =
+        {
+            {
+                0, 1, 2, 3
+            }, 
+            {
+                2, 5, 6, 3
+            }, 
+            {
+                1, 4, 5, 2
+            }, 
+            {
+                0, 7, 4, 1
+            }, 
+            {
+                0, 7, 6, 3
+            }, 
+            {
+                4, 7, 6, 5
+            }
+        };
 
         // Normal vectors for each face
-        float[][] n = {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {-1, 0, 0}, {0, 0, -1}, {0, -1, 0}};
+        float[][] n =
+        {
+            {
+                0, 1, 0
+            }, 
+            {
+                1, 0, 0
+            }, 
+            {
+                0, 0, 1
+            }, 
+            {
+                -1, 0, 0
+            }, 
+            {
+                0, 0, -1
+            }, 
+            {
+                0, -1, 0
+            }
+        };
 
         // Note: draw the cube in OpenGL immediate mode for simplicity. Real applications should use vertex arrays
         // or vertex buffer objects to achieve better performance.
@@ -298,39 +384,43 @@ public class Cube extends ApplicationTemplate implements Renderable
 
     protected static class AppFrame extends ApplicationTemplate.AppFrame
     {
+
+        private Dimension canvasSize;
+
         public AppFrame()
         {
-            super(true, true, false);
-
+            super(true, false, false);
+            canvasSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+            super.setBounds(0, 0, canvasSize.width, canvasSize.height);
             RenderableLayer layer = new RenderableLayer();
-            
+
             Semaphore semaphore = new Semaphore(0);
-        try
-        {
-            Database db = new Database(semaphore);
-            db.connect("mongodb://hackuser:hackuser@csdm-mongodb.rgu.ac.uk/hackais");
-            ArrayList<Vessel> vessels = db.getAllVessels();
-            semaphore.acquire();
-            System.out.println(vessels.size());
-            db.disconnect();
-           
-            for (Vessel vessel : vessels)
+            try
             {
-                if(vessel.getLatitude() != 0 && vessel.getLongitude() != 0 
-                        && vessel.getShipType() > 0 
-                        && vessel.getShipType() < 246 
-                        && vessel.getShipType() != 218 
-                        || vessel.getShipType() == 248)
+                Database db = new Database(semaphore);
+                db.connect("mongodb://hackuser:hackuser@csdm-mongodb.rgu.ac.uk/hackais");
+                ArrayList<Vessel> vessels = db.getAllVessels();
+                semaphore.acquire();
+                System.out.println(vessels.size());
+                db.disconnect();
+
+                for (Vessel vessel : vessels)
                 {
-                    Cube cube = new Cube(Position.fromDegrees(vessel.getLongitude(), vessel.getLatitude(), 100), 1000);
-                    layer.addRenderable(cube);
+                    if (vessel.getLatitude() != 0 && vessel.getLongitude() != 0
+                            && vessel.getShipType() > 0
+                            && vessel.getShipType() < 246
+                            && vessel.getShipType() != 218
+                            || vessel.getShipType() == 248)
+                    {
+                        Cube cube = new Cube(Position.fromDegrees(vessel.getLongitude(), vessel.getLatitude(), 100), 1000);
+                        layer.addRenderable(cube);
+                    }
                 }
             }
-        }
-        catch (InterruptedException ex)
-        {
-            Logger.getLogger(LeapMotionShip.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(LeapMotionShip.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             getWwd().getModel().getLayers().add(layer);
         }
@@ -338,7 +428,7 @@ public class Cube extends ApplicationTemplate implements Renderable
 
     public static void main(String[] args)
     {
-        
+
         // Create a sample listener and controller
         Configuration.setValue(AVKey.INITIAL_LATITUDE, 65);
         Configuration.setValue(AVKey.INITIAL_LONGITUDE, -1.2);
@@ -346,21 +436,24 @@ public class Cube extends ApplicationTemplate implements Renderable
         Configuration.setValue(AVKey.INITIAL_PITCH, 45);
         Configuration.setValue(AVKey.INITIAL_HEADING, 45);
 
-        //ApplicationTemplate.start("World Wind Custom Renderable Tutorial", AppFrame.class);
-        
+        ApplicationTemplate.start("World Wind Custom Renderable Tutorial", AppFrame.class);
+
         SampleListener listener = new SampleListener();
         com.leapmotion.leap.Controller controller = new com.leapmotion.leap.Controller();
-        
+
         controller.addListener(listener);
         // Keep this process running until Enter is pressed
         System.out.println("Press Enter to quit...");
-        
-        try {
+
+        try
+        {
             System.in.read();
-        } catch (IOException e) {
         }
-        
-                // Remove the sample listener when done
+        catch (IOException e)
+        {
+        }
+
+        // Remove the sample listener when done
         controller.removeListener(listener);
     }
 }
