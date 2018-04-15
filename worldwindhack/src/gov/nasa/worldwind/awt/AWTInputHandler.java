@@ -714,7 +714,7 @@ public class AWTInputHandler extends WWObjectImpl
         this.eventListeners.remove(SelectListener.class, listener);
     }
 
-    protected void callSelectListeners(SelectEvent event)
+     protected void callSelectListeners(SelectEvent event)
     {
         for (SelectListener listener : this.eventListeners.getListeners(SelectListener.class))
         {

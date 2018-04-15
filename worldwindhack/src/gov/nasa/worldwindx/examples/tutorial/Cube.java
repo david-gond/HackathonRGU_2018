@@ -92,7 +92,7 @@ public class Cube extends ApplicationTemplate implements Renderable
     }
 
     public void render(DrawContext dc)
-    {
+    { 
         // Render is called twice, once for picking and once for rendering. In both cases an OrderedCube is added to
         // the ordered renderable queue.
 
@@ -355,13 +355,13 @@ public class Cube extends ApplicationTemplate implements Renderable
 
 
         
-        Configuration.setValue(AVKey.INITIAL_LATITUDE, 35.0);
-        Configuration.setValue(AVKey.INITIAL_LONGITUDE, -120.0);
-        Configuration.setValue(AVKey.INITIAL_ALTITUDE, 15500);
+        Configuration.setValue(AVKey.INITIAL_LATITUDE, 65);
+        Configuration.setValue(AVKey.INITIAL_LONGITUDE, -1.2);
+        Configuration.setValue(AVKey.INITIAL_ALTITUDE, 5000000);
         Configuration.setValue(AVKey.INITIAL_PITCH, 45);
         Configuration.setValue(AVKey.INITIAL_HEADING, 45);
 
-        ApplicationTemplate.start("World Wind Custom Renderable Tutorial", AppFrame.class);
+        //ApplicationTemplate.start("World Wind Custom Renderable Tutorial", AppFrame.class);
         
         SampleListener listener = new SampleListener();
         com.leapmotion.leap.Controller controller = new com.leapmotion.leap.Controller();
