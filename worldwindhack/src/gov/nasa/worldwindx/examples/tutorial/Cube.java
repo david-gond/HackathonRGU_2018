@@ -6,6 +6,9 @@
 
 package gov.nasa.worldwindx.examples.tutorial;
 
+import MongoDB.Database;
+import MongoDB.LeapMotionShip;
+import MongoDB.Vessel;
 import gov.nasa.worldwind.Configuration;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.*;
@@ -20,6 +23,10 @@ import MotionLeapListener.SampleListener;
 import javax.media.opengl.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -296,8 +303,46 @@ public class Cube extends ApplicationTemplate implements Renderable
             super(true, true, false);
 
             RenderableLayer layer = new RenderableLayer();
-            Cube cube = new Cube(Position.fromDegrees(35.0, -120.0, 3000), 1000);
-            layer.addRenderable(cube);
+            
+            Semaphore semaphore = new Semaphore(0);
+        try
+        {
+            Database db = new Database(semaphore);
+            db.connect("mongodb://hackuser:hackuser@csdm-mongodb.rgu.ac.uk/hackais");
+            ArrayList<Vessel> vessels = db.getAllVessels();
+            semaphore.acquire();
+            System.out.println(vessels.size());
+            /*
+            */
+            db.disconnect();
+            
+            /*for (Vessel vessel : vessels)
+            {
+                if(vessel.getLatitude() != 0 && vessel.getLongitude() != 0){
+                Cube cube = new Cube(Position.fromDegrees(vessel.getLatitude(), vessel.getLongitude(), 3000), (vessel.getLength() * vessel.getWidth()) *10);
+                layer.addRenderable(cube);
+                }
+            }*/
+            
+            
+            for (Vessel vessel : vessels)
+            {
+                if(vessel.getLatitude() != 0 && vessel.getLongitude() != 0 
+                        && vessel.getShipType() > 0 
+                        && vessel.getShipType() < 246 && vessel.getShipType() != 218 || vessel.getShipType() == 248){
+                Cube cube = new Cube(Position.fromDegrees(vessel.getLongitude(), vessel.getLatitude(), 100), 1000);
+                layer.addRenderable(cube);
+                }
+            }
+            
+            
+        }
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(LeapMotionShip.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+            
 
             getWwd().getModel().getLayers().add(layer);
         }
