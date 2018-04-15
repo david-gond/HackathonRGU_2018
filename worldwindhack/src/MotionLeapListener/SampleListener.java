@@ -1,8 +1,10 @@
 package MotionLeapListener;
         
+import com.leapmotion.leap.CircleGesture;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture;
+import com.leapmotion.leap.Gesture.State;
 import static com.leapmotion.leap.Gesture.State.STATE_START;
 import static com.leapmotion.leap.Gesture.State.STATE_STOP;
 import com.leapmotion.leap.GestureList;
@@ -68,7 +70,31 @@ public class SampleListener extends Listener {
         for (int i = 0; i < gestures.count(); i++) {
             Gesture gesture = gestures.get(i);
             
-            switch (gesture.type()) {  
+            switch (gesture.type()) { 
+                case TYPE_CIRCLE:
+                    System.out.println("Found a circle!");
+                    CircleGesture circleGesture = new CircleGesture(gesture);
+                    String clockwise = "";
+                    if(circleGesture.pointable().direction().angleTo(circleGesture.normal()) <= Math.PI/4) {
+                        clockwise = "clockwise";
+                    }
+                    else {
+                        clockwise = "anticlockwise";
+                    }
+                    double sweptAngle = 0;
+                    if(circleGesture.state() != State.STATE_START) {
+                        // If the circle is just starting, don't record an angle yet
+                        CircleGesture previous = new CircleGesture(controller.frame(1).gesture(circleGesture.id()));
+                        // How far between the previous circle point and this point?
+                        sweptAngle = (circleGesture.progress() - previous.progress()) * 2 * Math.PI;
+                    }
+                    System.out.println("Circle id: " + String.valueOf(circleGesture.id())
+                            + ", State: " + circleGesture.state()
+                            + ", Progress: " + circleGesture.progress()
+                            + ", Radius: " + circleGesture.radius()
+                            + ", SweptAngle: " + Math.toDegrees(sweptAngle)
+                            + ", Direction: " + clockwise);
+                    break;
                 case TYPE_SWIPE:
                     //System.out.println("found a type_swipe!");
                     SwipeGesture swipe = new SwipeGesture(gesture);
@@ -87,20 +113,25 @@ public class SampleListener extends Listener {
                     switch (swipe.state()) {
                         case STATE_START:
                             int id = swipe.id();
-                            System.out.println("Triggered start state");
+                            
+                            //System.out.println("Triggered start state");
+                            /*
                             System.out.println("got a start state at " 
                                     + String.valueOf(id) + ", value: " 
                                     + String.valueOf(swipe.position()) 
                                     + " speed : " + swipe.speed());
+                            */
                             gesturesArray[id].start = swipe.position();
                             break;
                         case STATE_STOP:
                             
                             if (swipe.speed() > 200)
                             {
+                                /*
                                 System.out.println("got a stop state at " 
                                     + String.valueOf(swipe.id())
                                     + " speed : " + swipe.speed());
+*/
                                 gesturesArray[swipe.id()].stop = swipe.position();
                                 gesturesArray[swipe.id()].speed = swipe.speed();
                             }
@@ -108,10 +139,10 @@ public class SampleListener extends Listener {
                             if((gesturesArray[swipe.id()].stop.getX() != 0.0) &&
                                (gesturesArray[swipe.id()].start.getX() != 0.0)) {
                                 // If it's valid we will return a direction
-                                    System.out.println("Calling returnDirection!");
+                                    //System.out.println("Calling returnDirection!");
                                     Direction thingy = gesturesArray[swipe.id()].returnDirectionAndSpeed();
-                                    System.out.println("Result: " + thingy);
-                                    moveMouse(thingy);
+                                    //System.out.println("Result: " + thingy);
+                                    //moveMouse(thingy);
                             }
                             break;
                     }

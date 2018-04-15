@@ -331,6 +331,7 @@ public class Cube extends ApplicationTemplate implements Renderable
         {
             Logger.getLogger(LeapMotionShip.class.getName()).log(Level.SEVERE, null, ex);
         }
+
             getWwd().getModel().getLayers().add(layer);
         }
     }
@@ -345,7 +346,7 @@ public class Cube extends ApplicationTemplate implements Renderable
         Configuration.setValue(AVKey.INITIAL_PITCH, 45);
         Configuration.setValue(AVKey.INITIAL_HEADING, 45);
 
-        ApplicationTemplate.start("World Wind Custom Renderable Tutorial", AppFrame.class);
+        //ApplicationTemplate.start("World Wind Custom Renderable Tutorial", AppFrame.class);
         
         SampleListener listener = new SampleListener();
         com.leapmotion.leap.Controller controller = new com.leapmotion.leap.Controller();
