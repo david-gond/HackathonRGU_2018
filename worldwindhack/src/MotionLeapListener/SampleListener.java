@@ -3,6 +3,8 @@ package MotionLeapListener;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture;
+import static com.leapmotion.leap.Gesture.State.STATE_START;
+import static com.leapmotion.leap.Gesture.State.STATE_STOP;
 import com.leapmotion.leap.GestureList;
 import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
@@ -16,6 +18,8 @@ public class SampleListener extends Listener {
     
 
     public void onInit(Controller controller) {
+        for (int i = 0 ; i < gesturesArray.length; i++)
+            gesturesArray[i] = new fullGestureDetails();
         System.out.println("Initialised!");
     }
     public void onConnect(Controller controller) {
@@ -66,23 +70,30 @@ public class SampleListener extends Listener {
                             
                     + " Speed: " + swipe.speed());
                     */
-
-                    System.out.println("String value: " + String.valueOf(swipe.state()));
+                    if (swipe.state() == STATE_START || swipe.state() == STATE_STOP)
+                        System.out.println("String value: " + String.valueOf(swipe.state()));
                    // System.out.println("Gesture_1 start: " + gesturesArray[1].start + ", stop: " +  gesturesArray[1].stop );
                    // switch ((String.valueOf(swipe.state()).trim())) {
                     switch (swipe.state()) {
                         case STATE_START:
-                            int id = Integer.valueOf(swipe.id());
+                            int id = swipe.id();
                             System.out.println("Triggered start state");
-                            System.out.println("got a start state at " + String.valueOf(id) + ", value: " + String.valueOf(swipe.position()));
+                            System.out.println("got a start state at " 
+                                    + String.valueOf(id) + ", value: " 
+                                    + String.valueOf(swipe.position()) 
+                                    + " speed : " + swipe.speed());
                             gesturesArray[id].start = swipe.position();
-                            System.out.println(String.valueOf(id));
-                            System.out.println((gesturesArray[id].start).get(1));
                             break;
                         case STATE_STOP:
-                            System.out.println("got a stop state at " + String.valueOf(swipe.id()));
-                            gesturesArray[swipe.id()].stop = swipe.position();
-                            gesturesArray[swipe.id()].speed = swipe.speed();
+                            
+                            if (swipe.speed() > 130)
+                            {
+                                System.out.println("got a stop state at " 
+                                    + String.valueOf(swipe.id())
+                                    + " speed : " + swipe.speed());
+                                gesturesArray[swipe.id()].stop = swipe.position();
+                                gesturesArray[swipe.id()].speed = swipe.speed();
+                            }
                             // Check if we now have a valid start and stop value for this ID
                             if((gesturesArray[swipe.id()].stop.getX() != 0.0) &&
                                (gesturesArray[swipe.id()].start.getX() != 0.0)) {
@@ -93,9 +104,6 @@ public class SampleListener extends Listener {
                             }
                             break;
                     }
-                    
-                        
-                    
                     break;
             }
         }
