@@ -1,0 +1,47 @@
+enum Direction
+{
+	UP, DOWN, LEFT, RIGHT
+}
+
+public void function moveMouse(Direction direction)
+{
+	Robot robot = null;
+	try 
+	{
+		robot = new Robot();
+		Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+		Point mousePoint = MouseInfo.getPointerInfo().getLocation();
+		switch(direction)
+		{
+		case UP:
+			robot.mouseMove(screenSize.width/2, 50);
+			robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+			robot.mouseMove(screenSize.width /2, screenSize.height/2);
+			robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+			break;
+		case DOWN:
+			robot.mouseMove(screenSize.width/2, screenSize.height/2);
+			robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+			robot.mouseMove(screenSize.width /2, 50);
+			robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+			break;
+		case LEFT:
+			robot.mouseMove(screenSize.width/2, screenSize.height/2);
+			robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+			robot.mouseMove(screenSize.width-50, screenSize.height/2);
+			robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+			break;
+		case RIGHT:
+			robot.mouseMove(screenSize.width - 50, screenSize.height/2);
+			robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+			robot.mouseMove(screenSize.width /2, screenSize.height/2);
+			robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+			break;
+		}
+		robot.mouseMove(mousePoint.x, mousePoint.y);
+	} 
+	catch (AWTException ex) 
+	{
+		Logger.getLogger(ViewControlsSelectListener.class.getName()).log(Level.SEVERE, null, ex);
+	}
+}
