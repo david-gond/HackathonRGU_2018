@@ -1,15 +1,15 @@
 package MotionLeapListener;
 
-import com.leapmotion.leap.CircleGesture;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture;
-import com.leapmotion.leap.Gesture.State;
 import static com.leapmotion.leap.Gesture.State.STATE_START;
 import static com.leapmotion.leap.Gesture.State.STATE_STOP;
 import com.leapmotion.leap.GestureList;
+import com.leapmotion.leap.KeyTapGesture;
 import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
+import com.leapmotion.leap.Vector;
 import gov.nasa.worldwind.layers.ViewControlsSelectListener;
 import java.awt.AWTException;
 import java.awt.Dimension;
@@ -17,9 +17,9 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.HashMap;
 
 enum Direction
 {
@@ -40,6 +40,7 @@ public class SampleListener extends Listener
         {
             gestureSwipes[i] = new gestureSwipe();
         }
+        
         System.out.println("Initialised!");
     }
 
@@ -47,7 +48,7 @@ public class SampleListener extends Listener
     {
         System.out.println("Connected to motion sensor");
         controller.enableGesture(Gesture.Type.TYPE_SWIPE);
-        controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
+        //controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
         controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
         controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
     }
@@ -83,12 +84,11 @@ public class SampleListener extends Listener
         for (int i = 0; i < gestures.count(); i++)
         {
             Gesture gesture = gestures.get(i);
-
+            System.out.println("Gesture get " + gesture.type());
             switch (gesture.type())
             {
 
                 case TYPE_SWIPE:
-                    //System.out.println("found a type_swipe!");
                     SwipeGesture swipe = new SwipeGesture(gesture);
                     /*
                     System.out.println("Swipe ID: " + swipe.id()    
@@ -98,23 +98,29 @@ public class SampleListener extends Listener
                             
                     + " Speed: " + swipe.speed());
                      */
-                    if (swipe.state() == STATE_START || swipe.state() == STATE_STOP)
+                    if (swipe.state() == STATE_START)
 
                     // System.out.println("Gesture_1 start: " + gesturesArray[1].start + ", stop: " +  gesturesArray[1].stop );
                     // switch ((String.valueOf(swipe.state()).trim())) {
                     {
+                        
+                        if (swipe.speed() > 200)
+                        {
+                            gestureSwipe gestureSwipe = new gestureSwipe();
+                            gestureSwipe.start = swipe.startPosition();
+                            gestureSwipe.stop = swipe.position();
+                            gestureSwipe.id = swipe.id();
+
+                            moveMouse(gestureSwipe.returnDirectionAndSpeed(), 0);
+                        }
+                        
+
+                        /*
                         switch (swipe.state())
                         {
                             case STATE_START:
                                 int id = swipe.id();
 
-                                //System.out.println("Triggered start state");
-                                /*
-                            System.out.println("got a start state at " 
-                                    + String.valueOf(id) + ", value: " 
-                                    + String.valueOf(swipe.position()) 
-                                    + " speed : " + swipe.speed());
-                                 */
                                 gestureSwipes[currentSwipeIndex].start = swipe.position();
                                 break;
                             case STATE_STOP:
@@ -129,11 +135,7 @@ public class SampleListener extends Listener
                                 }
                                 if (swipe.speed() > 0)
                                 {
-                                    /*
-                                System.out.println("got a stop state at " 
-                                    + String.valueOf(swipe.id())
-                                    + " speed : " + swipe.speed());
-                                     */
+                                   
                                     gestureSwipes[currentSwipeIndex].stop = swipe.position();
                                     gestureSwipes[currentSwipeIndex].speed = swipe.speed();
                                 }
@@ -157,11 +159,11 @@ public class SampleListener extends Listener
                                 {
                                     currentSwipeIndex = 0;
                                 }
-                                break;
+                                break;*/
                         }
-                    }
+                    
                     break;
-                case TYPE_CIRCLE:
+                /*case TYPE_CIRCLE:
                     //System.out.println("Found a circle!");
                     CircleGesture circleGesture = new CircleGesture(gesture);
                     String clockwise = "";
@@ -224,7 +226,15 @@ public class SampleListener extends Listener
                             }
                             break;
                     }
-                    break;
+                    break;*/
+                    case TYPE_KEY_TAP:
+                        KeyTapGesture keytapGesture = new KeyTapGesture(gesture);
+                        if (keytapGesture.direction() != new Vector())
+                            moveMouse(Direction.ZOOM_OUT, 100);
+                        break;
+                    case TYPE_SCREEN_TAP:
+                        moveMouse(Direction.ZOOM_IN, 100);
+                        break;
             }
         }
     }
@@ -278,11 +288,11 @@ public class SampleListener extends Listener
                 case LEFT:
                     robot.mouseMove(screenSize.width / 2, screenSize.height / 2);
                     robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-                    robot.mouseMove(screenSize.width - 50, screenSize.height / 2);
+                    robot.mouseMove(screenSize.width /4, screenSize.height / 2);
                     robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
                     break;
                 case RIGHT:
-                    robot.mouseMove(screenSize.width - 50, screenSize.height / 2);
+                    robot.mouseMove(screenSize.width /4, screenSize.height / 2);
                     robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
                     robot.mouseMove(screenSize.width / 2, screenSize.height / 2);
                     robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);

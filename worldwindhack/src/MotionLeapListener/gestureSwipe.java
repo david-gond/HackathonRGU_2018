@@ -18,7 +18,6 @@ public class gestureSwipe {
     double speed;
     
     public Direction returnDirectionAndSpeed() {
-    
         // Which direction are we going? Let's compare x and y.
         double startX = start.getX();
         double endX = stop.getX();
